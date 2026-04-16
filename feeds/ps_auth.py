@@ -257,7 +257,7 @@ class PSAuth:
         # Step 3: auth-token via proxy (bypasses IP block on datacenter VPS)
         # Try all WL domains — proxy is Amsterdam which is unblocked
         from curl_cffi.requests import AsyncSession as _DirectSession
-        _PROXY = "http://168.199.244.251:80"
+        _PROXY = "http://rxosiilx:ixxq4bdohxzj@168.199.244.251:6783"
         _WL_DOMAINS = ["lenvora8.com", "auremi88.com", "eviran66.com", "mervani99.com"]
 
         proxy_session = _DirectSession(impersonate="chrome120", proxies={"https": _PROXY, "http": _PROXY})
