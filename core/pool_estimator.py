@@ -37,18 +37,18 @@ class PoolEstimator:
             log_warn("pool_est", f"[POOL_EST] Unknown item: '{name}' — not in exchange DB")
         return 0
 
-    async def estimate_pool(self, etop_api, parent_id: str) -> float:
+    async def estimate_pool(self, etop_api, mid: str) -> float:
         """Fetch tuhao and return total pool in gold. No cache."""
         if not self._loaded:
             return 0
-        bettors = await etop_api.fetch_tuhao(parent_id)
+        bettors = await etop_api.fetch_tuhao(mid)
         if not bettors:
             return 0
         total_gold = sum(
             sum(self._item_value(it) for it in bettor.get('items', []))
             for bettor in bettors
         )
-        log_info(f"[TUHAO] mid={parent_id} pool={total_gold:.0f}g bettors={len(bettors)}")
+        log_info(f"[TUHAO] mid={mid} pool={total_gold:.0f}g bettors={len(bettors)}")
         return total_gold
 
     def calc_value_cap(self, min_pool: float, max_pool_impact: float, hard_cap: float) -> float:

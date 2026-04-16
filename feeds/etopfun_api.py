@@ -272,28 +272,28 @@ class EtopfunAPI:
 
     # ── ETOP-10: fetch_tuhao ─────────────────────────────────────────────────
 
-    async def fetch_tuhao(self, parent_id: str) -> list:
-        """Fetch top magnates (bettors) for a match. Returns list of bettors with items."""
-        url = f"{ETOP_BASE_URL}/api/match/{parent_id}/tuhao.do"
+    async def fetch_tuhao(self, mid: str) -> list:
+        """Fetch top magnates (bettors) for a sub-match. Returns list of bettors with items."""
+        url = f"{ETOP_BASE_URL}/api/match/{mid}/tuhao.do"
         params = {'lang': 'en'}
         try:
             async with self.session.get(url, params=params, headers=self.headers) as r:
                 if r.status == 429:
-                    log_warn("tuhao", f"[TUHAO] HTTP 429 for parent={parent_id} (using cached)")
-                    return self._tuhao_last.get(str(parent_id), [])
+                    log_warn("tuhao", f"[TUHAO] HTTP 429 for mid={mid} (using cached)")
+                    return self._tuhao_last.get(str(mid), [])
                 if r.status != 200:
-                    log_warn("tuhao", f"[TUHAO] HTTP {r.status} for parent={parent_id}")
-                    return self._tuhao_last.get(str(parent_id), [])
+                    log_warn("tuhao", f"[TUHAO] HTTP {r.status} for mid={mid}")
+                    return self._tuhao_last.get(str(mid), [])
                 data = await r.json()
                 bettors = data.get('datas', {}).get('list', [])
-                log_info(f"[TUHAO] parent={parent_id}: {len(bettors)} bettors returned")
+                log_info(f"[TUHAO] mid={mid}: {len(bettors)} bettors returned")
                 # Cache successful result
                 if bettors:
-                    self._tuhao_last[str(parent_id)] = bettors
+                    self._tuhao_last[str(mid)] = bettors
                 return bettors
         except Exception as e:
-            log_warn("tuhao", f"[TUHAO] FAIL parent={parent_id}: {e}")
-            return self._tuhao_last.get(str(parent_id), [])
+            log_warn("tuhao", f"[TUHAO] FAIL mid={mid}: {e}")
+            return self._tuhao_last.get(str(mid), [])
 
     # ── ETOP-11: fetch_exchange_db ────────────────────────────────────────────
 
