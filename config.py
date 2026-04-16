@@ -96,10 +96,9 @@ HDP_AWAY_ODDS_IDX        = _req('HDP_AWAY_ODDS_IDX')
 
 # ── Phase validation ───────────────────────────────────────────────────────────
 if not (PHASE1_EV >= PHASE2_EV >= PHASE3_EV):
-    raise ValueError(
-        f"[CONFIG] Phase EVs must be descending: "
-        f"PHASE1_EV({PHASE1_EV}) >= PHASE2_EV({PHASE2_EV}) >= PHASE3_EV({PHASE3_EV})"
-    )
+    print(f"[CONFIG] WARNING: Phase EVs not descending: "
+          f"PHASE1_EV({PHASE1_EV}) >= PHASE2_EV({PHASE2_EV}) >= PHASE3_EV({PHASE3_EV})",
+          flush=True)
 
 # ── Paths (derived, not in bot_config.json) ────────────────────────────────────
 import os

@@ -380,6 +380,16 @@ async def main():
     asyncio.create_task(_discovery_loop(
         container, live_feed, evidence_db, ps_auth, etop_api))
 
+    # Catch unhandled asyncio task exceptions and alert via Telegram
+    def _task_exception_handler(loop, context):
+        exc = context.get("exception")
+        msg = context.get("message", "Unknown")
+        import traceback as _tb
+        detail = "".join(_tb.format_exception(type(exc), exc, exc.__traceback__))[-800:] if exc else msg
+        log_error("TASK_CRASH", detail)
+        _send_crash_alert(f"🔴 Task crash: {msg}\n{detail[-600:]}")
+    asyncio.get_event_loop().set_exception_handler(_task_exception_handler)
+
     log_info("CleanFlowBot started. Pipeline: classify → match → valuate → fire → dash")
     from core.notifier import notify
     from core import telegram_bot
@@ -784,5 +794,25 @@ async def _discovery_loop(container, live_feed, evidence_db, ps_auth, etop_api):
         await asyncio.sleep(10)
 
 
+def _send_crash_alert(msg: str):
+    """Send crash notification via stdlib urllib — works even if curl_cffi not loaded."""
+    try:
+        import urllib.request as _ur, json as _jj
+        from core.notifier import TELEGRAM_TOKEN, TELEGRAM_CHAT
+        body = _jj.dumps({"chat_id": TELEGRAM_CHAT, "text": msg}).encode()
+        req = _ur.Request(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            data=body, headers={"Content-Type": "application/json"})
+        _ur.urlopen(req, timeout=10)
+    except Exception:
+        pass
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass
+    except Exception as e:
+        import traceback as _tb
+        _send_crash_alert(f"🔴 CleanFlowBot CRASHED:\n{_tb.format_exc()[-1000:]}")
