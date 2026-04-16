@@ -390,7 +390,7 @@ async def _run(container, ps_store, etop_api, inventory, listing, pool_estimator
         score = _priority_score((mid, m, ev1, ev2, side, fresh_o1, fresh_o2, fresh_remain))
         tuhao_str = f"tuhao={tuhao_ms:.0f}ms" if tuhao_ms > 0 else "tuhao=cached"
         log_info(f"[FIRE_READY] {m.team1} vs {m.team2} [{m.label}] "
-                 f"ev={best_ev:+.2f}% pool={m.raw_pool:.0f}g cap={m.remaining_cap:.0f}g "
+                 f"ev={best_ev:+.2f}% o1={fresh_o1:.4f}/o2={fresh_o2:.4f} pool={m.raw_pool:.0f}g cap={m.remaining_cap:.0f}g "
                  f"remain={fresh_remain}s priority={score:.1f} "
                  f"freshness: {tuhao_str} list={list_ms:.0f}ms ev={ev_ms:.0f}ms ps_age={ps_age}s")
 
