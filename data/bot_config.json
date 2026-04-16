@@ -1,9 +1,9 @@
 {
   "DRY_RUN": false,
   "MIN_EV": 1.5,
-  "PHASE1_EV": 1.5,
-  "PHASE2_EV": 4.0,
-  "PHASE3_EV": 1.0,
+  "PHASE1_EV": 10.0,
+  "PHASE2_EV": 5.0,
+  "PHASE3_EV": 1.5,
   "MIN_RAW_POOL": 2500,
   "TRIGGER_SECS": 90,
 "EXTENSION_SECS": 300,
