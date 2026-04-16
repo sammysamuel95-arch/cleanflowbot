@@ -289,8 +289,8 @@ async def _run(container, ps_store, etop_api, inventory, listing, pool_estimator
             _, fresh_listing = await etop_api.match_list()
             container.etop_last_fetch = time.time()
         except Exception as e:
-            log_warn("FIRE_LIST", f"match_list failed: {e}")
-            fresh_listing = listing  # fallback to cycle's listing
+            log_warn("FIRE_LIST", f"match_list failed: {e} — aborting fire cycle")
+            return
         list_ms = (time.time() - list_ts) * 1000
 
         # ── 4. Recompute EV with FRESHEST data ──
@@ -376,6 +376,9 @@ async def _run(container, ps_store, etop_api, inventory, listing, pool_estimator
         if item_id is None:
             log_prefire(f"{m.team1} vs {m.team2} [{m.label}]",
                        f"NO_ITEM remaining_cap={remaining_cap:.1f}")
+            if not inventory.has_free_items():
+                log_info(f"[FIRE_ABORT] inventory empty — ending fire cycle")
+                break
             continue
 
         item_value = inventory.get_item_value(item_id)
