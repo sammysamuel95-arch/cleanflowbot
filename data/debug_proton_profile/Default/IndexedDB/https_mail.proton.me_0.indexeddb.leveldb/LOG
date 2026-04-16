@@ -1,0 +1,6 @@
+2026/04/12-04:57:58.230 8dcb20 Creating DB /Users/sammy/VibeCoding/ProjectBot/CleanFlowBot-clean/data/debug_proton_profile/Default/IndexedDB/https_mail.proton.me_0.indexeddb.leveldb since it was missing.
+2026/04/12-04:57:58.231 8dcb20 Reusing MANIFEST /Users/sammy/VibeCoding/ProjectBot/CleanFlowBot-clean/data/debug_proton_profile/Default/IndexedDB/https_mail.proton.me_0.indexeddb.leveldb/MANIFEST-000001
+2026/04/12-04:57:59.072 8dcb23 Level-0 table #5: started
+2026/04/12-04:57:59.073 8dcb23 Level-0 table #5: 1010 bytes OK
+2026/04/12-04:57:59.077 8dcb23 Delete type=0 #3
+2026/04/12-04:57:59.077 8dcb21 Manual compaction at level-0 from '\x00\x02\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x03\x00\x00\x00' @ 0 : 0; will stop at (end)

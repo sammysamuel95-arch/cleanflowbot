@@ -1,0 +1,12 @@
+data/auth/
+data/secrets.env
+data/playwright_etop_profile/
+data/log/
+data/*.pid
+data/*.png
+data/*.DS_Store
+__pycache__/
+*.pyc
+*.log
+logs/
+data/debug_proton_profile/

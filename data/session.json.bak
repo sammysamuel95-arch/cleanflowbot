@@ -1,0 +1,84 @@
+[
+  {
+    "name": "DJSP_UUID",
+    "value": "19d7e96bdf43fda80b02cbb8",
+    "domain": "www.etopfun.com",
+    "path": "/",
+    "expires": 1810505301.364316,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "DJSP_USER",
+    "value": "5FKPbO9h3stEB5En4G5NCh%2F4Ty2aN%2BDtQnHw23KTGT5a7%2Bs8qlD5KRjKnsHrC2jrPxFoVr3k%2Fj4MOvrkD4L91eoY73bAQ0Xwxx4rXwB23NJeUQxSs%2BV%2FkOoY73bAQ0Xwxx4rXwB23NKtcLQVJ9x4rw%3D%3D",
+    "domain": "www.etopfun.com",
+    "path": "/",
+    "expires": 1776550170.728302,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "locale",
+    "value": "en",
+    "domain": "www.etopfun.com",
+    "path": "/",
+    "expires": 1810505371.5359,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "SCRIPT_VERSION",
+    "value": "29.31.48",
+    "domain": "www.etopfun.com",
+    "path": "/",
+    "expires": 1807481371,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_ga",
+    "value": "GA1.1.1339358583.1775945372",
+    "domain": ".etopfun.com",
+    "path": "/",
+    "expires": 1810505550.886076,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "JSESSIONID",
+    "value": "0038F42A2697205455B7CBA29B9DE023",
+    "domain": "www.etopfun.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": true,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_ga_TDF3LV246N",
+    "value": "GS2.1.s1775945371$o1$g1$t1775945550$j60$l0$h0",
+    "domain": ".etopfun.com",
+    "path": "/",
+    "expires": 1810505550.888607,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "cf_clearance",
+    "value": "_6mEyacpPrHL5UxienR2CIqydhVR6WCmvudRnG.m8R4-1775945551-1.2.1.1-2.8G.27ppQh7TJ3gq1S02LCF1T_udhMiHB9D5iBIPrRY20S1nLM9MeQBeqrlrhKTAZUCeu3otrMB2GXMCfmBCbzBBJulQpYwOiwTKfhkzgyurQ4fVapVfu.tuNq9CfpipDL1QVw4rXvGR31QLHnTqRTNWNL.A6e1QINsS6Lto0QMJqp6Gui0mIz_aa1cIl1oMUu8FnT.9tv7eneifEgivd2UVf0kGQsvKVKLjzdIgDckqAvlC.036l3wDYSQtMqHQc6a1D4o0YiPsTvqxyIUx7EP8BPAQ2INfWDiwc5yYM3tPomigOX9jCsh7Lbq1KGxDlxVQyJXUAD7fF1xGPQFQA",
+    "domain": ".etopfun.com",
+    "path": "/",
+    "expires": 1807481551.052707,
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None",
+    "partitionKey": "https://etopfun.com",
+    "_crHasCrossSiteAncestor": false
+  }
+]
