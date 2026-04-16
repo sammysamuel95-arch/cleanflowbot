@@ -1034,7 +1034,8 @@ function handleSSEData(s) {
 }
 
 function initSSE() {
-  const es = new EventSource('http://localhost:8889/sse');
+  const sseHost = window.location.hostname;
+  const es = new EventSource('http://' + sseHost + ':8889/sse');
   es.onmessage = (e) => {
     try { handleSSEData(JSON.parse(e.data)); } catch(err) {}
   };
