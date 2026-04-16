@@ -44,6 +44,7 @@ import time
 from aiohttp import web as sse_web
 import traceback
 import os
+import sys
 import signal
 import atexit
 
@@ -397,6 +398,7 @@ async def main():
     asyncio.create_task(telegram_bot.poll_loop(container, inventory))
     asyncio.create_task(telegram_bot.health_watchdog_loop(container))
     asyncio.create_task(_log_rotation_loop())
+    asyncio.create_task(_master_watchdog(container, asyncio.all_tasks()))
 
     # ── 4. MAIN PIPELINE LOOP ─────────────────────────────────────
     ps_store = live_feed.event_store  # TheOnlyStore (unchanged)
@@ -474,6 +476,62 @@ async def main():
 # ═══════════════════════════════════════════════════════════════════════
 # BACKGROUND TASKS (kept simple, proven logic)
 # ═══════════════════════════════════════════════════════════════════════
+
+async def _master_watchdog(container, startup_tasks):
+    """Master watchdog — monitors pipeline + key tasks, restarts if anything freezes.
+
+    Checks every 30s:
+      - Pipeline alive: dash_state updated_at fresh (< 120s)
+      - TG poll task alive: task not dead
+    If pipeline frozen > 120s → crash alert + os.execv restart.
+    """
+    CHECK_INTERVAL = 30
+    WARN_AGE = 60
+    RESTART_AGE = 120
+
+    await asyncio.sleep(120)  # let bot fully start before watching
+    log_info("[WATCHDOG] Master watchdog started")
+
+    _warned = False
+
+    while not _SHUTDOWN:
+        await asyncio.sleep(CHECK_INTERVAL)
+        try:
+            # Check pipeline freshness via dash_state.json
+            import json as _j
+            dash_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'dash_state.json')
+            try:
+                with open(dash_path) as f:
+                    ds = _j.load(f)
+                age = time.time() - ds.get('updated_at', ds.get('ts', 0))
+            except Exception:
+                age = 0  # file not written yet is fine early on
+
+            if age > RESTART_AGE:
+                msg = f"🔴 Pipeline FROZEN {int(age)}s — restarting bot"
+                log_error("WATCHDOG", msg)
+                _send_crash_alert(msg)
+                await asyncio.sleep(2)
+                os.execv(sys.executable, [sys.executable] + sys.argv)
+
+            elif age > WARN_AGE and not _warned:
+                log_warn("WATCHDOG", f"Pipeline slow: dash_state age={int(age)}s")
+                _warned = True
+            elif age <= WARN_AGE:
+                _warned = False
+
+            # Check TG poll task alive (find by coro name)
+            all_tasks = asyncio.all_tasks()
+            tg_alive = any('poll_loop' in str(t.get_coro()) for t in all_tasks)
+            if not tg_alive:
+                log_warn("WATCHDOG", "TG poll_loop task dead — restarting bot")
+                _send_crash_alert("🔴 TG poll_loop died — restarting bot")
+                await asyncio.sleep(2)
+                os.execv(sys.executable, [sys.executable] + sys.argv)
+
+        except Exception as e:
+            log_warn("WATCHDOG", f"Check error: {e}")
+
 
 async def _log_rotation_loop():
     """Check log file size every hour and rotate if >100MB. No restart needed."""

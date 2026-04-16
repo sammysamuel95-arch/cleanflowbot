@@ -199,7 +199,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/bot
 ExecStart=/opt/botenv/bin/python3 main.py
-Restart=on-failure
+Restart=always
 RestartSec=30
 StandardOutput=journal
 StandardError=journal
@@ -452,7 +452,7 @@ SSE:                http://45.32.25.201:8889/sse
 
 | Metric | Value |
 |--------|-------|
-| VPS deployment | 45.32.25.201 (Vultr Tokyo) |
+| VPS deployment | 108.160.142.44 (Vultr Tokyo) |
 | First successful WS stream | April 16 2026 02:04 WIB |
 | Cookie count (Mac Playwright) | 32 |
 | Cookie count (VPS curl_cffi login) | ~10 (INSUFFICIENT for wstoken) |
