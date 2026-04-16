@@ -174,6 +174,57 @@ async def _cmd_restart():
     os.execv(sys.executable, [sys.executable] + sys.argv)
 
 
+async def health_watchdog_loop(container):
+    """Send a health ping every 30 minutes. Alert if silent (no fires) while FIRE_ZONE markets exist."""
+    INTERVAL = 30 * 60          # 30 min normal ping
+    SILENT_THRESHOLD = 4 * 3600 # alert if no fires for 4h with FIRE_ZONE markets
+    _last_fire_ts = [0.0]       # tracks last known fire time
+
+    await asyncio.sleep(60)     # wait 1 min after startup before first ping
+    log_info("[WATCHDOG] Health watchdog started")
+
+    while True:
+        try:
+            uptime_s = int(time.time() - _start_time)
+            h, m, s = uptime_s // 3600, (uptime_s % 3600) // 60, uptime_s % 60
+
+            total   = len(container.markets)
+            matched = sum(1 for mk in container.markets.values() if mk.ps_event_id)
+            fzone   = sum(1 for mk in container.markets.values() if mk.state == 'FIRE_ZONE')
+            fires   = sum(mk.total_fired for mk in container.markets.values())
+
+            # Update last known fire time
+            for mk in container.markets.values():
+                if mk.total_fired > 0 and mk.last_fire_at > _last_fire_ts[0]:
+                    _last_fire_ts[0] = mk.last_fire_at
+
+            # Silent alert: FIRE_ZONE markets exist but no fires in 4h
+            silent_secs = time.time() - _last_fire_ts[0] if _last_fire_ts[0] > 0 else uptime_s
+            silent_alert = fzone > 0 and silent_secs > SILENT_THRESHOLD
+
+            if silent_alert:
+                lines = [
+                    f"⚠️ <b>SILENT ALERT</b>",
+                    f"No fires for {int(silent_secs/3600)}h {int((silent_secs%3600)/60)}m",
+                    f"But {fzone} FIRE_ZONE markets exist — check bot!",
+                    f"Uptime: {h}h {m}m {s}s | Markets: {total} matched: {matched}",
+                ]
+            else:
+                lines = [
+                    f"💓 <b>Health ping</b>",
+                    f"Uptime: {h}h {m}m {s}s",
+                    f"Markets: {total} | matched: {matched} | FIRE_ZONE: {fzone}",
+                    f"Total fires this session: {fires}",
+                ]
+
+            await _send("\n".join(lines))
+
+        except Exception as e:
+            log_warn("WATCHDOG", f"Ping failed: {e}")
+
+        await asyncio.sleep(INTERVAL)
+
+
 async def poll_loop(container, inventory):
     """Long-poll Telegram for incoming commands. Runs forever."""
     global _last_update

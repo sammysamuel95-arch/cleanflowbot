@@ -385,6 +385,7 @@ async def main():
     from core import telegram_bot
     asyncio.create_task(notify("🤖 CleanFlowBot started", debounce_key="bot_start"))
     asyncio.create_task(telegram_bot.poll_loop(container, inventory))
+    asyncio.create_task(telegram_bot.health_watchdog_loop(container))
     asyncio.create_task(_log_rotation_loop())
 
     # ── 4. MAIN PIPELINE LOOP ─────────────────────────────────────
